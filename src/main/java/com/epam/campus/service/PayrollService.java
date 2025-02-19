@@ -1,4 +1,5 @@
 package com.epam.campus.service;
+import org.springframework.stereotype.Service;
 
 import com.epam.campus.model.Employee;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class PayrollService {
 
     private static final Map<String, Double> roleSalaryMap = new HashMap<>();
@@ -24,9 +26,7 @@ public class PayrollService {
     }
 
     public void generatePayrollByDepartment(Map<Integer, Employee> employees, String department) {
-        List<Employee> deptEmployees = employees.values().stream()
-                .filter(employee -> employee.getDepartment().equalsIgnoreCase(department))
-                .collect(Collectors.toList());
+        List<Employee> deptEmployees = employees.values().stream().filter(employee -> employee.getDepartment().equalsIgnoreCase(department)).collect(Collectors.toList());
         if (deptEmployees.isEmpty()) {
             System.out.println("No employees found in department: " + department);
             return;
@@ -34,7 +34,7 @@ public class PayrollService {
         System.out.println("Payroll: ");
         double totalSalary = 0;
         for (Employee emp : deptEmployees) {
-            double salary = getSalaryForRole(emp.getRole());
+            double salary = getSalaryForRole(emp.getDesignation());
             totalSalary += salary;
         }
         System.out.println("Total Department Payroll: $" + totalSalary);
@@ -46,9 +46,9 @@ public class PayrollService {
             return;
         }
 
-        double salary = getSalaryForRole(employee.getRole());
+        double salary = getSalaryForRole(employee.getDesignation());
         System.out.println("Payroll for Employee: " + employee.getName());
-        System.out.println("Role: " + employee.getRole());
+        System.out.println("Role: " + employee.getDesignation());
         System.out.println("Salary: $" + salary);
     }
 }
