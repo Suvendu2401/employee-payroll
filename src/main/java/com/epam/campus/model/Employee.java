@@ -1,26 +1,36 @@
 package com.epam.campus.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+@Entity
 @Getter
 @Setter
+@Table(name = "employees")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Employee {
+    @Id
     private int employeeId;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String department;
+
+    @Column(nullable = false)
     private String designation;
+
+    @Column(name = "date_of_joining")
     private Date dateOfJoining;
 
-    public Employee(int employeeId, String name, String designation, String department, Date dateOfJoining) {
-        this.employeeId = employeeId;
-        this.name = name;
-        this.designation = designation;
-        this.department = department;
-        this.dateOfJoining = dateOfJoining;
-    }
+    @Column(nullable = false)
+    private double salary;
 
     @Override
     public String toString() {
@@ -33,40 +43,6 @@ public class Employee {
                 '}';
     }
 
-    public static class Builder {
-        private int employeeId;
-        private String name;
-        private String department;
-        private String designation;
-        private Date dateOfJoining;
-
-        public Builder setEmployeeId(int employeeId) {
-            this.employeeId = employeeId;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder setDepartment(String department) {
-            this.department = department;
-            return this;
-        }
-
-        public Builder setDesignation(String designation) {
-            this.designation = designation;
-            return this;
-        }
-
-        public Builder setDateOfJoining(Date dateOfJoining) {
-            this.dateOfJoining = dateOfJoining;
-            return this;
-        }
-
-        public Employee build() {
-            return new Employee(employeeId, name, department, designation, dateOfJoining);
-        }
+    public void setDateOfJoining(Date dateOfJoining) {
     }
 }
