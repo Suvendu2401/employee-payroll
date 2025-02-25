@@ -21,8 +21,12 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Optional<Employee> getEmployeeById(int id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(int id) {
+        Optional<Employee> employeeOpt = employeeRepository.findById(id);
+
+         Employee employee = employeeOpt.get();
+         return employee;
+
     }
 
     public List<Employee> getAllEmployees() {

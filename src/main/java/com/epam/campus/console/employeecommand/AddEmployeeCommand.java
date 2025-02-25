@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -36,7 +39,7 @@ public class AddEmployeeCommand implements Command {
         int employeeId = getIntInput("Employee ID: ");
         String department = validateDepartment();
         String designation = validateDesignation(department);
-        Date dateOfJoining = getValidDate();
+        LocalDate dateOfJoining = getValidDate();
 
         double salary = departmentService.getSalary(department, designation);
 
@@ -68,14 +71,17 @@ public class AddEmployeeCommand implements Command {
         }
     }
 
-    private Date getValidDate() {
+    private LocalDate getValidDate() {
         while (true) {
-            System.out.print("Date of joining (dd-MM-yyyy): ");
-            String dateInput = scanner.nextLine().trim();
             try {
-                return dateFormat.parse(dateInput);
-            } catch (ParseException e) {
-                System.out.println("Invalid Date format. Please try again.");
+                System.out.print("Date of joining (dd-MM-yyyy): ");
+                String dateInput = scanner.nextLine().trim();
+
+                LocalDate localDate = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                System.out.println("Parsed Date: " + localDate);
+                return localDate;
+            } catch (Exception e) {
+                throw new RuntimeException("Invalid Date format: "+e);
             }
         }
     }

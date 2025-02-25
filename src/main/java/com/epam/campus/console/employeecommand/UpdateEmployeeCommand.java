@@ -6,8 +6,10 @@ import com.epam.campus.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -28,21 +30,21 @@ public class UpdateEmployeeCommand implements Command {
     @Override
     public void execute() {
         int updateId = getValidEmployeeId();
-        Optional<Employee>existingEmployee = employeeService.getEmployeeById(updateId);
+        Employee existingEmployee = employeeService.getEmployeeById(updateId);
 
-        if (existingEmployee.isEmpty()) {
+        if (existingEmployee == null) {
             System.out.println("Employee Not found!");
             return;
         }
-        Employee employee = existingEmployee.get();
-        System.out.println("Updating employee: " + employee.getName() + " -> " + employee.getEmployeeId());
+        System.out.println("Updating employee: " + existingEmployee.getName() + " -> " + existingEmployee.getEmployeeId());
 
-        String newName = getUpdatedInput("New name (Leave blank to keep previous name): ", employee.getName());
+        String newName = getUpdatedInput("New name (Leave blank to keep previous name): ", existingEmployee.getName());
 
-        String newDesignation = getUpdatedDesignation(employee.getDepartment(), employee.getDesignation());
-        String newDepartment = getUpdatedInput("New Department ( Leave blank to keep existing: " + employee.getDepartment() + "):", employee.getDepartment());
+        String newDesignation = getUpdatedDesignation(existingEmployee.getDepartment(), existingEmployee.getDesignation());
+        String newDepartment = getUpdatedInput("New Department ( Leave blank to keep existing: " + existingEmployee.getDepartment() + "):", existingEmployee.getDepartment());
 
-        Date newDateOfJoining = getUpdatedDate(employee.getDateOfJoining());
+        LocalDate newDateOfJoining = getUpdatedDate(existingEmployee.getDateOfJoining());
+
 
         Employee updatedEmployee = new Employee();
         updatedEmployee.setName(newName);
@@ -104,17 +106,19 @@ public class UpdateEmployeeCommand implements Command {
         return currentDesignation;
     }
 
-    private Date getUpdatedDate(Date currentDate) {
+    private LocalDate getUpdatedDate(LocalDate currentDate) {
         while (true) {
-            System.out.print("New Date of Joining (dd-MM-yyyy) (Leave Blank to keep Previous date): ");
-            String dateInput = scanner.nextLine().trim();
-            if (dateInput.isEmpty()) {
-                return currentDate;
-            }
             try {
-                return dateFormat.parse(dateInput);
-            } catch (ParseException e) {
-                System.out.println(" Invalid date format. Please try again.");
+                System.out.print("New Date of Joining (dd-MM-yyyy) (Leave Blank to keep Previous date): ");
+                String dateInput = scanner.nextLine().trim();
+                if (dateInput.isEmpty()) {
+                    return currentDate;
+                }
+                LocalDate localDate =  LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                System.out.println("Parsed Date: " + localDate);
+                return localDate;
+            } catch (Exception e) {
+                throw new RuntimeException("Invalid date" + e);
             }
         }
     }

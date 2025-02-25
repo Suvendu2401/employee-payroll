@@ -27,7 +27,7 @@ public class Employee {
     private String designation;
 
     @Column(name = "date_of_joining")
-    private Date dateOfJoining;
+    private LocalDate dateOfJoining;
 
     @Column(nullable = false)
     private double salary;
@@ -43,6 +43,6 @@ public class Employee {
                 '}';
     }
 
-    public void setDateOfJoining(Date dateOfJoining) {
+    public void setDateOfJoining(LocalDate dateOfJoining) {
     }
 }

@@ -26,14 +26,14 @@ public class PayrollByIdCommand implements Command {
     @Override
     public void execute() {
         int searchId = getValidEmployeeId();
-        Optional<Employee> employee =employeeService.getEmployeeById(searchId);
+        Employee employee =employeeService.getEmployeeById(searchId);
 
-        if(employee.isEmpty()){
+        if(employee == null){
             System.out.println("Employee wth Id: " + searchId + "not found." );
             return;
         }
-        Employee emp = employee.get();
-        System.out.println("Employee with employee ID: " + searchId + "Payroll : " + emp.getSalary());
+
+        System.out.println("Employee with employee ID: " + searchId + "Payroll : " + employee.getSalary());
     }
 
     private int getValidEmployeeId(){
