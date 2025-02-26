@@ -1,12 +1,12 @@
 package com.epam.campus.controller;
 
-import com.epam.campus.model.Employee;
+import com.epam.campus.DTO.EmployeeDTO;
 import com.epam.campus.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -19,29 +19,58 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getAllEmployees(){
+    public List<EmployeeDTO> getAllEmployees(){
         return employeeService.getAllEmployees();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id){
-        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    public EmployeeDTO getEmployeeById(@PathVariable Integer id){
+        return employeeService.getEmployeeById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee){
-        Employee savedEmployee = employeeService.addEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDto){
+        return employeeService.addEmployee(employeeDto);
+    }
+
+    @GetMapping("/payroll/{department}")
+    public Double payrollByDepartment(@PathVariable String department){
+        return employeeService.getPayrollByJobTitle(department);
+    }
+
+    @GetMapping("/payroll/{jobTitle}")
+    public Double payrollByJobTitle(@PathVariable String jobTitle){
+        return employeeService.getPayrollByJobTitle(jobTitle);
+    }
+
+    @GetMapping("/payroll")
+    public Double totalPayroll(){
+        return employeeService.getTotalPayroll();
+    }
+
+    @GetMapping("/payroll/department/{departmentName}/average-salary")
+    public Double averagePayroll(@PathVariable String departmentName){
+        return employeeService.calculateAverageSalaryByDepartment(departmentName);
+    }
+
+    @GetMapping("/grouped-by-department")
+    public Map<String, List<EmployeeDTO>> employeeByDepartment (){
+        return employeeService.getEmployeesByDepartment();
+    }
+
+    @GetMapping("/top-salaries/{n}")
+    public List<EmployeeDTO> topNHighestPaidEmployee(@PathVariable int n){
+        return employeeService.getTopNHighestPaidEmployees(n);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee (@PathVariable Integer id, @RequestBody Employee employee){
-        return ResponseEntity.ok(employeeService.updateEmployee(id, employee));
+    public EmployeeDTO updateEmployee (@PathVariable Integer id, @RequestBody EmployeeDTO employeeDto){
+        return employeeService.updateEmployee(id, employeeDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable Integer id){
+    public void deleteEmployee(@PathVariable Integer id){
         employeeService.deleteEmployee(id);
-        return ResponseEntity.noContent().build();
+
     }
 }

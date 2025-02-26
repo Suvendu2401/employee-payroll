@@ -95,10 +95,6 @@ public class DepartmentService {
         System.out.println("Department: " + departmentName+ " deleted Successfully");
     }
 
-    public Map<String, Double> getDesignationsByDepartment(String departmentName) {
-        Optional<Department> departmentOpt = departmentRepository.findByName(departmentName);
-        return departmentOpt.map(Department::getDesignations).orElse(new TreeMap<>());
-    }
 
     public double getSalary(String departmentName, String designation){
         Optional<Department>departmentOpt = departmentRepository.findByName(departmentName);

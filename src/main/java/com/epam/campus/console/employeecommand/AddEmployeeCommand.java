@@ -1,18 +1,14 @@
 package com.epam.campus.console.employeecommand;
 
-import com.epam.campus.repository.EmployeeRepository;
 import com.epam.campus.model.Employee;
+import com.epam.campus.repository.EmployeeRepository;
 import com.epam.campus.service.DepartmentService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Scanner;
 
 @Component
@@ -44,12 +40,12 @@ public class AddEmployeeCommand implements Command {
         double salary = departmentService.getSalary(department, designation);
 
         Employee employee = new Employee();
-                employee.setEmployeeId(employeeId);
-                employee.setName(name);
-                employee.setDesignation(designation);
-                employee.setDepartment(department);
-                employee.setDateOfJoining(dateOfJoining);
-                employee.setSalary(salary);
+        employee.setEmployeeId(employeeId);
+        employee.setName(name);
+        employee.setDesignation(designation);
+        employee.setDepartment(department);
+        employee.setDateOfJoining(dateOfJoining);
+        employee.setSalary(salary);
 
         employeeRepository.save(employee);
         System.out.println("Employee Added Successfully");
@@ -81,7 +77,7 @@ public class AddEmployeeCommand implements Command {
                 System.out.println("Parsed Date: " + localDate);
                 return localDate;
             } catch (Exception e) {
-                throw new RuntimeException("Invalid Date format: "+e);
+                throw new RuntimeException("Invalid Date format: " + e);
             }
         }
     }
@@ -101,7 +97,7 @@ public class AddEmployeeCommand implements Command {
 
     private String validateDesignation(String department) {
         String designation = getInput("Employee Designation");
-        if (!departmentService.getDesignationsByDepartment(department).containsKey(designation)) {
+        if (!departmentService.getDesignationByDepartment(department).containsKey(designation)) {
             System.out.print("Designation doesnt exist. Do you want to add this? (Y/N): ");
             if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 double salary = Double.parseDouble(getInput("Enter the base salary of this designation: "));
