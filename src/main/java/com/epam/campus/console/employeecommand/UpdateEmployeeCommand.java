@@ -1,14 +1,12 @@
 package com.epam.campus.console.employeecommand;
 
-import com.epam.campus.model.Employee;
+import com.epam.campus.DTO.EmployeeDTO;
 import com.epam.campus.service.DepartmentService;
 import com.epam.campus.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -18,7 +16,6 @@ public class UpdateEmployeeCommand implements Command {
     private final EmployeeService employeeService;
     private final DepartmentService departmentService;
     private final Scanner scanner;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
     public UpdateEmployeeCommand(EmployeeService employeeService, Scanner scanner, DepartmentService departmentService) {
@@ -30,7 +27,7 @@ public class UpdateEmployeeCommand implements Command {
     @Override
     public void execute() {
         int updateId = getValidEmployeeId();
-        Employee existingEmployee = employeeService.getEmployeeById(updateId);
+        EmployeeDTO existingEmployee = employeeService.getEmployeeById(updateId);
 
         if (existingEmployee == null) {
             System.out.println("Employee Not found!");
@@ -46,7 +43,7 @@ public class UpdateEmployeeCommand implements Command {
         LocalDate newDateOfJoining = getUpdatedDate(existingEmployee.getDateOfJoining());
 
 
-        Employee updatedEmployee = new Employee();
+        EmployeeDTO updatedEmployee = new EmployeeDTO();
         updatedEmployee.setName(newName);
         updatedEmployee.setDepartment(newDepartment);
         updatedEmployee.setDesignation(newDesignation);

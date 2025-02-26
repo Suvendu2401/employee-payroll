@@ -1,5 +1,6 @@
 package com.epam.campus.console.employeecommand;
 
+import com.epam.campus.DTO.EmployeeDTO;
 import com.epam.campus.model.Employee;
 import com.epam.campus.service.DepartmentService;
 import com.epam.campus.service.EmployeeService;
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+
 
 @Component
 public class PayrollByDepartmentCommand implements Command {
@@ -37,14 +40,15 @@ public class PayrollByDepartmentCommand implements Command {
             System.out.println("Department " + dept + " doesnt exist");
             return;
         }
-        List<Employee> employees  = employeeService.getEmployeesByDepartment(dept);
-        if(employees.isEmpty()){
+        Map<String, List<EmployeeDTO>> employeeByDepartment = employeeService.getEmployeesByDepartment(dept);
+        if(employeeByDepartment.isEmpty()){
             System.out.println("No employees found in the database.");
             return;
         }
-        double totalPayroll = employees.stream().mapToDouble(Employee::getSalary).sum();
+        List<EmployeeDTO> employees = employeeByDepartment.values().stream().flatMap(List::stream).toList();
+        double employeeSalaryByDepartment = employees.stream().filter(e -> e.getDepartment().equalsIgnoreCase(dept)).mapToDouble(EmployeeDTO::getSalary).reduce(0,Double::sum);
 
         System.out.println("Payroll for department: "+ dept);
-        System.out.println("Payroll : " + totalPayroll);
+        System.out.println("Payroll : " + employeeSalaryByDepartment);
     }
 }

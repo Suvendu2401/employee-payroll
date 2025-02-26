@@ -1,5 +1,6 @@
 package com.epam.campus.console.employeecommand;
 
+import com.epam.campus.DTO.EmployeeDTO;
 import com.epam.campus.model.Employee;
 import com.epam.campus.service.DepartmentService;
 import com.epam.campus.service.EmployeeService;
@@ -26,7 +27,7 @@ public class PayrollByIdCommand implements Command {
     @Override
     public void execute() {
         int searchId = getValidEmployeeId();
-        Employee employee =employeeService.getEmployeeById(searchId);
+        EmployeeDTO employee =employeeService.getEmployeeById(searchId);
 
         if(employee == null){
             System.out.println("Employee wth Id: " + searchId + "not found." );
