@@ -1,5 +1,6 @@
-package com.epam.campus.DTO;
+package com.epam.campus.mapper;
 
+import com.epam.campus.DTO.EmployeeDTO;
 import com.epam.campus.model.Employee;
 
 public class EmployeeMapper {

@@ -1,4 +1,4 @@
-package com.epam.campus.DTO;
+package com.epam.campus.mapper;
 
 public class DepartmentMapper {
 }

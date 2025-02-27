@@ -59,8 +59,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/top-salaries/{n}")
-    public List<EmployeeDTO> topNHighestPaidEmployee(@PathVariable int n){
+    public List<EmployeeDTO> topNHighestPaidEmployee(@PathVariable Integer n){
         return employeeService.getTopNHighestPaidEmployees(n);
+    }
+
+    @GetMapping("/hired-in-last/{months}")
+    public List<EmployeeDTO> hiredInLastNMonths(@PathVariable Integer months){
+        return employeeService.getHiredEmployeesInLastNMonth(months);
     }
 
     @PutMapping("/{id}")

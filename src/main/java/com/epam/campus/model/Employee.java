@@ -26,6 +26,7 @@ public class Employee {
     @Column(nullable = false)
     private String designation;
 
+    @Setter
     @Column(name = "date_of_joining")
     private LocalDate dateOfJoining;
 
@@ -41,8 +42,5 @@ public class Employee {
                 "\nRole:" + designation +
                 "\nDate Of Joining: " + dateOfJoining +
                 '}';
-    }
-
-    public void setDateOfJoining(LocalDate dateOfJoining) {
     }
 }
