@@ -5,14 +5,16 @@ import com.epam.campus.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.epam.campus.util.Logging;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+
 @Service
 public class DepartmentService {
-
     private final DepartmentRepository departmentRepository;
+
 
     @Autowired
     public DepartmentService(DepartmentRepository departmentRepository){
@@ -25,53 +27,53 @@ public class DepartmentService {
 
     public void addDepartment(String departmentName){
         if(departmentRepository.existsByName(departmentName)){
-            System.out.println("Department already exists.");
+            Logging.logger.error("Department already exists.");
             return;
         }
         Department department = new Department();
         department.setName(departmentName);
         departmentRepository.save(department);
-        System.out.println("Department added successfully");
+        Logging.logger.info("Department added successfully");
     }
 
     public void addDesignation(String departmentName, String designation, double salary){
         Optional<Department> departmentOpt = departmentRepository.findByName(departmentName);
         if(departmentOpt.isEmpty()){
-            System.out.println("Department not found");
+            Logging.logger.error("Department not found");
             return;
         }
 
         Department department = departmentOpt.get();
         department.getDesignations().put(designation, salary);
         departmentRepository.save(department);
-        System.out.println("Designation added to "+ departmentName);
+        Logging.logger.info("Designation added to "+ departmentName);
     }
 
     public void updateDepartment(String departmentName, String newDepartmentName){
         Optional<Department> departmentOpt = departmentRepository.findByName(departmentName);
         if (departmentOpt.isEmpty()){
-            System.out.println("Department not found");
+            Logging.logger.error("Department not found");
             return;
         }
 
         Department department = new Department();
         department.setName(newDepartmentName);
         departmentRepository.save(department);
-        System.out.println("Department updated");
+        Logging.logger.info("Department updated");
     }
 
     public void deleteDesignation(String departmentName, String designation){
         Optional<Department>departmentOpt = departmentRepository.findByName(departmentName);
         if(departmentOpt.isEmpty()){
-            System.out.println("Department not found");
+            Logging.logger.error("Department not found");
             return;
         }
         Department department = new Department();
        if(department.getDesignations().remove(designation) != null){
            departmentRepository.save(department);
-           System.out.println(("Designation removed"));
+           Logging.logger.info("Designation removed");
        }else{
-           System.out.println("Designation not found");
+           Logging.logger.error("Designation not found");
        }
     }
 
@@ -83,29 +85,29 @@ public class DepartmentService {
     public void deleteDepartment(String departmentName){
         Optional<Department> departmentOpt =departmentRepository.findByName(departmentName);
         if (departmentOpt.isEmpty()){
-            System.out.println("Department not found");
+            Logging.logger.error("Department not found");
             return;
         }
         Department department = departmentOpt.get();
         if(!department.getDesignations().isEmpty()){
-            System.out.println("Cannot delete department. Department contains designations. Delete designations first.");
+            Logging.logger.warn("Cannot delete department. Department contains designations. Delete designations first.");
            return;
         }
         departmentRepository.deleteByName(departmentName);
-        System.out.println("Department: " + departmentName+ " deleted Successfully");
+        Logging.logger.debug("Department: " + departmentName+ " deleted Successfully");
     }
 
 
     public double getSalary(String departmentName, String designation){
         Optional<Department>departmentOpt = departmentRepository.findByName(departmentName);
         if(departmentOpt.isEmpty()){
-            System.out.println("Department is not present. Value returned 0.0");
+            Logging.logger.error("Department is not present. Value returned 0.0");
             return 0.0;
         }
         Department department = departmentOpt.get();
         Map<String, Double> designations = department.getDesignations();
         if(!designations.containsKey(designation)){
-            System.out.println("Designation doesnt exist. Returned 0.0");
+            Logging.logger.error("Designation doesnt exist. Returned 0.0");
             return 0.0;
         }
         return designations.get(designation);
